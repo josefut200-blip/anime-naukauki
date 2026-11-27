@@ -1,14 +1,40 @@
 <!doctype html>
 <html lang="pt-BR">
   <head>
-    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Guias e notas da KageStream sobre animes, watchlists e streaming estático." />
-    <link rel="stylesheet" href="style.css?v=4" /><title>Blog de Animes — KageStream</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog de Animes — KageStream</title>
+    <meta name="description" content="Guias práticos da KageStream sobre como escolher anime, organizar watchlist e entender como funciona um catálogo estático." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css?v=4" />
   </head>
   <body class="static-page">
-    <header class="site-header"><a class="brand" href="index.html#top"><span class="brand-mark">K</span><span>Kage<span>Stream</span></span></a><nav class="main-nav" aria-label="Navegação principal"><a href="index.html#top">Início</a><a href="index.html#trending">Populares</a><a href="index.html#new-releases">Lançamentos</a><a href="index.html#my-list">Minha lista</a><a href="about.html">Sobre</a><a href="blog.html">Blog</a><a href="contact.html">Contato</a><a href="admin.html">Admin</a></nav><a class="button button-ghost" href="index.html">Voltar</a></header>
-    <main class="content-section"><p class="eyebrow">NOTAS DO UNIVERSO OTAKU</p><h1>Do radar para a sua watchlist.</h1><p class="lead">Guias rápidos para encontrar seu próximo anime, organizar favoritos e aproveitar melhor uma plataforma de streaming gratuita.</p><div class="page-grid"><article class="page-card"><p class="eyebrow">GUIA</p><h2>Como escolher seu próximo anime</h2><p>Combine nota, gênero, ano e sinopse para encontrar histórias que realmente combinam com você.</p><a class="back-link" href="index.html#trending">Ver o radar →</a></article><article class="page-card"><p class="eyebrow">COMUNIDADE</p><h2>Monte uma watchlist que dá vontade de assistir</h2><p>Salve títulos no momento em que descobrir e use o histórico para retomar de onde parou.</p><a class="back-link" href="index.html#my-list">Minha lista →</a></article><article class="page-card"><p class="eyebrow">TECNOLOGIA</p><h2>Streaming estático sem backend pago</h2><p>Veja como catálogo, player e experiência de usuário podem funcionar em hospedagem gratuita.</p><a class="back-link" href="about.html">Sobre o projeto →</a></article></div></main>
+    <header class="site-header" id="top">
+      <a class="brand" href="index.html#top" aria-label="KageStream início"><span class="brand-mark">K</span><span>Kage<span>Stream</span></span></a>
+      <nav class="main-nav" aria-label="Navegação principal"><a href="index.html#top">Início</a><a href="index.html#trending">Populares</a><a href="index.html#new-releases">Lançamentos</a><a href="index.html#my-list">Minha lista</a><a href="about.html">Sobre</a><a href="blog.html">Blog</a><a href="contact.html">Contato</a><a href="admin.html">Admin</a></nav>
+      <form class="search-form" action="index.html" role="search"><label class="sr-only" for="blog-search">Buscar anime</label><input id="blog-search" name="q" type="search" placeholder="Buscar animes..." autocomplete="off" /><button type="submit" aria-label="Buscar">⌕</button></form>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">☰</button>
+    </header>
+    <main class="content-section">
+      <p class="eyebrow">NOTAS DO UNIVERSO OTAKU</p><h1>Do radar para a sua watchlist.</h1><p class="lead">Guias curtos e diretos sobre descobrir anime, organizar favoritos e entender os bastidores de um catálogo que roda inteiro no navegador.</p>
+      <div class="prose">
+        <h2>Como escolher seu próximo anime sem cair no endless scroll</h2>
+        <p>Abrir um catálogo gigante sem critério costuma terminar em meia hora de rolagem e nenhum episódio assistido. Uma forma mais rápida de decidir é ir dos filtros mais rígidos para os mais flexíveis.</p>
+        <ul class="plain"><li><strong>Tempo disponível.</strong> Uma OVA de dois episódios e uma série de cem pedem decisões diferentes.</li><li><strong>Gênero do momento.</strong> Pergunte o que você quer sentir agora: tensão, comédia leve ou nostalgia.</li><li><strong>Nota como desempate.</strong> Notas altas eliminam descobertas interessantes; use-as entre opções que você já quase escolheu.</li><li><strong>Sinopse de três linhas.</strong> Se as primeiras linhas não geram curiosidade, dificilmente o restante vai gerar.</li></ul>
+        <p>Na KageStream, temporada, gêneros, nota e busca ficam na mesma tela — o objetivo é reduzir o tempo entre encontrar uma história e começar o primeiro episódio.</p><a class="back-link" href="index.html#trending">Ver o radar da temporada →</a>
+        <h2>Watchlist: como montar uma lista que você realmente volta a abrir</h2>
+        <p>A maioria das watchlists morre porque vira uma lista de “queria assistir algum dia” com cinquenta itens. Três ajustes ajudam:</p>
+        <ul class="plain"><li><strong>Salve no momento da curiosidade.</strong> O impulso passa em minutos; salvar na hora evita perder o título.</li><li><strong>Limite os itens ativos.</strong> Cinco títulos em aberto são mais úteis que cinquenta sem ordem.</li><li><strong>Use o histórico para retomar.</strong> Voltar de onde parou reduz o atrito de recomeçar.</li></ul>
+        <p>Favoritos e histórico ficam salvos no navegador via <code>localStorage</code>, sem conta e sem sincronização — a contrapartida é que a lista pertence a esse navegador específico.</p><a class="back-link" href="index.html#my-list">Ver minha lista →</a>
+        <h2>Como funciona um catálogo de streaming sem backend pago</h2>
+        <p>A KageStream é um site estático: HTML, CSS e JavaScript servidos diretamente por GitHub Pages, sem servidor de aplicação ou banco tradicional.</p>
+        <ul class="plain"><li><strong>Catálogo</strong> — consultado em tempo real na Jikan API.</li><li><strong>Vídeos</strong> — cadastrados manualmente como links autorizados MP4, M3U8 ou embed.</li><li><strong>Preferências</strong> — favoritos e histórico guardados no navegador de cada visitante.</li></ul>
+        <p>A vantagem é o custo zero de hospedagem. A limitação é que a plataforma não substitui um serviço de streaming completo: não há upload de arquivos, conta de usuário ou sincronização entre dispositivos.</p><a class="back-link" href="about.html">Entender o projeto por completo →</a>
+      </div>
+    </main>
     <footer class="site-footer"><div class="brand"><span class="brand-mark">K</span><span>Kage<span>Stream</span></span></div><p>Notas para quem ama anime.</p></footer>
+    <script>document.getElementById('menu-toggle').onclick=()=>document.querySelector('.main-nav').classList.toggle('open');</script>
   </body>
 </html>
 
