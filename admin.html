@@ -9,16 +9,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=5" />
+    <link rel="stylesheet" href="style.css?v=6" />
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   </head>
   <body class="admin-page">
     <header class="site-header admin-header">
-      <a class="brand" href="index.html#top" aria-label="KageStream início"><span class="brand-mark">K</span><span>Kage<span>Stream</span></span></a>
-      <a class="button button-ghost" href="index.html">← Voltar para a Home</a>
+      <form class="search-form admin-search" role="search"><label class="sr-only" for="admin-search">Buscar no painel</label><input id="admin-search" type="search" placeholder="Buscar no painel..." /><button type="button" aria-label="Buscar">⌕</button></form><div class="admin-user-tools"><button class="admin-bell" type="button" aria-label="Notificações">♧<span></span></button><div class="admin-avatar">J</div><span class="admin-user-name">Administrador⌄</span><a class="button button-ghost" href="index.html">← Home</a></div>
     </header>
 
     <main class="admin-main">
+      <aside class="admin-sidebar"><a class="brand" href="index.html#top" aria-label="KageStream início"><span class="brand-mark">K</span><span>Kage<span>Stream</span></span></a><small>VISÃO GERAL</small><nav aria-label="Menu administrativo"><a class="active" href="#dashboard"><b>⌂</b><span>Dashboard</span></a><a href="#catalog-admin"><b>▦</b><span>Catálogo</span></a><a href="#admin"><b>▶</b><span>Episódios</span></a><a href="#banners"><b>▣</b><span>Banners</span></a><a href="#users"><b>♙</b><span>Usuários</span></a><a href="#comments"><b>☷</b><span>Comentários</span></a><a href="#stats"><b>⌁</b><span>Estatísticas</span></a><a href="#settings"><b>⚙</b><span>Configurações</span></a></nav></aside>
+      <div class="admin-workspace">
+      <section class="admin-dashboard-section" id="dashboard"><div class="admin-page-heading"><div><p class="eyebrow">PAINEL ADMINISTRATIVO</p><h1>Dashboard geral</h1><p>Visão geral da plataforma KageStream</p></div><span class="static-badge">● Dados demonstrativos</span></div><div class="admin-dashboard"><article class="metric-card"><div class="metric-icon">▷</div><span>Animes cadastrados</span><strong>428</strong><em>↗ +12 este mês</em></article><article class="metric-card"><div class="metric-icon">▱</div><span>Episódios</span><strong>6.380</strong><em>↗ +240 este mês</em></article><article class="metric-card"><div class="metric-icon">♙</div><span>Usuários ativos</span><strong>128.430</strong><em>↗ +7,4%</em></article><article class="metric-card"><div class="metric-icon">◉</div><span>Visualizações</span><strong>4.892.710</strong><em>↗ +11,2%</em></article></div><div class="admin-dashboard-grid"><article class="admin-panel"><h2>Crescimento de audiência</h2><p class="panel-subtitle">Usuários ativos (últimos 30 dias)</p><div class="chart"><svg viewBox="0 0 600 180" preserveAspectRatio="none" aria-label="Gráfico simulado"><polyline points="0,150 65,138 120,144 175,120 225,130 285,98 345,108 400,76 455,86 515,46 600,18" /></svg></div><div class="chart-labels"><span>1 jan</span><span>7 jan</span><span>14 jan</span><span>21 jan</span><span>28 jan</span></div></article><article class="admin-panel"><h2>Resumo da plataforma</h2><p class="panel-subtitle">Status operacional (simulado)</p><div class="checklist"><div><i>✓</i>Sistema estável</div><div><i>✓</i>Conteúdo em dia</div><div><i>↗</i>Audiência em alta</div></div></article><article class="admin-panel"><h2>Atividade recente</h2><p class="panel-subtitle">Últimas ações registradas localmente</p><div class="activity-list"><div class="activity-item"><div class="activity-avatar"></div><div>Novo anime cadastrado<span>Chama Interior · há 12 min</span></div></div><div class="activity-item"><div class="activity-avatar"></div><div>Episódio publicado<span>Horizonte de Áurea · há 28 min</span></div></div><div class="activity-item"><div class="activity-avatar"></div><div>Banner atualizado<span>Destaque da temporada · há 1 h</span></div></div></div></article></div></section>
       <section class="content-section admin-section" id="admin">
         <div class="section-heading"><div><p class="eyebrow">PAINEL DE ADMINISTRAÇÃO</p><h1>Cadastrar e corrigir vídeos</h1></div><button class="button button-ghost" id="export-videos" type="button">Exportar JSON</button></div>
         <div class="admin-warning">Use este painel para corrigir o anime, o episódio ou o código iframe. Os dados ficam salvos somente neste navegador.</div>
@@ -43,11 +45,12 @@
         </form>
         <div class="catalog-list" id="catalog-list"></div>
       </section>
+      </div>
     </main>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <footer class="site-footer"><div class="brand"><span class="brand-mark">K</span><span>Kage<span>Stream</span></span></div><p>Painel local de administração.</p></footer>
-    <script src="videos.js?v=6"></script><script src="app.js?v=8" type="module"></script>
+    <script src="videos.js?v=6"></script><script src="app.js?v=9" type="module"></script>
   </body>
 </html>
 
