@@ -15,7 +15,7 @@ window.CATALOGO = {
     "episodios": [
       {
         "numero": 1,
-        "tipo": "mp4",
+        "tipo": "iframe",
         "url": "https://player.vimeo.com/video/650514380?h=ffa88cffd9"
       },
       {
@@ -25,7 +25,7 @@ window.CATALOGO = {
       },
       {
         "numero": 3,
-        "tipo": "iframe",
+        "tipo": "mp4",
         "url": "https://rr1---sn-3xiauxaxjvh-pb0e.googlevideo.com/videoplayback?expire=1795830239&ei=X8EJa6jtH-iokNQP69aqgQE&ip=168.121.251.132&id=f4d1343bf8c85c25&itag=18&source=blogger&requiressl=yes&xpc=Egho7Zf3LnoBAQ==&cps=153&met=1795801439,&mh=cB&mm=31&mn=sn-3xiauxaxjvh-pb0e&ms=au&mv=m&mvi=1&pl=25&rms=au,au&susc=bl&svpuc=1&eaua=KylxTqAsYQM&mime=video/mp4&vprv=1&rqh=1&dur=1444.211&lmt=1534473586325335&mt=1795801149&sparams=expire,ei,ip,id,itag,source,requiressl,xpc,susc,svpuc,eaua,mime,vprv,rqh,dur,lmt&sig=AE0s2JYwRAIgL-nIamX7-6lHBxLOvhHiyx4tsirY0KULyOZhedYd7ZgCIHbRzCYvOPI-938sxLq62EntoUFPSVY7VElE0v3-CEo-&lsparams=cps,met,mh,mm,mn,ms,mv,mvi,pl,rms&lsig=APaTxxMwRgIhAO6O4vMZefjRVW9yvI15T0-lu9TbJkGHD7qu9-zqezKQAiEAtuNwm3CQI-QI7liD-UucW2n4Hhoqh2K045N9u7OUc1g=&cpn=e2z2XhfwuQnSzzoH&c=WEB_EMBEDDED_PLAYER&cver=1.20261122.05.00"
       }
     ]
