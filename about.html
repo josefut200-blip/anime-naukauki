@@ -1,14 +1,48 @@
 <!doctype html>
 <html lang="pt-BR">
   <head>
-    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Conheça a KageStream, uma plataforma gratuita para descobrir e organizar animes." />
-    <link rel="stylesheet" href="style.css?v=4" /><title>Sobre a KageStream</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sobre a KageStream</title>
+    <meta name="description" content="Conheça a KageStream: como o catálogo funciona, de onde vêm os dados e as regras para publicar vídeos com segurança." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css?v=4" />
   </head>
   <body class="static-page">
-    <header class="site-header"><a class="brand" href="index.html#top"><span class="brand-mark">K</span><span>Kage<span>Stream</span></span></a><nav class="main-nav" aria-label="Navegação principal"><a href="index.html#top">Início</a><a href="index.html#trending">Populares</a><a href="index.html#new-releases">Lançamentos</a><a href="index.html#my-list">Minha lista</a><a href="about.html">Sobre</a><a href="blog.html">Blog</a><a href="contact.html">Contato</a><a href="admin.html">Admin</a></nav><a class="button button-ghost" href="index.html">Voltar</a></header>
-    <main class="content-section"><p class="eyebrow">SOBRE A KAGESTREAM</p><h1>Seu próximo mundo favorito está a um play.</h1><p class="lead">A KageStream é uma experiência gratuita para descobrir animes, salvar favoritos e continuar assistindo diretamente no navegador.</p><div class="page-grid"><article class="page-card"><p class="eyebrow">01</p><h2>Descoberta inteligente</h2><p>Temporada, popularidade, notas, gêneros e busca organizados em uma interface rápida.</p></article><article class="page-card"><p class="eyebrow">02</p><h2>Seu espaço pessoal</h2><p>Favoritos e histórico ficam salvos localmente no navegador, sem exigir uma conta.</p></article><article class="page-card"><p class="eyebrow">03</p><h2>Web aberta</h2><p>O projeto pode ser hospedado gratuitamente em GitHub Pages, Netlify ou Vercel.</p></article></div><div class="prose"><h2>Como funciona</h2><p>O catálogo usa a Jikan API para buscar informações públicas sobre animes. Os vídeos são cadastrados pelo administrador usando links próprios, de domínio público ou devidamente autorizados.</p><p>Favoritos, histórico e cadastros locais usam o armazenamento do próprio navegador. Isso mantém o projeto simples, gratuito e fácil de publicar.</p></div><a class="back-link" href="index.html#trending">Explorar animes →</a></main>
-    <footer class="site-footer"><div class="brand"><span class="brand-mark">K</span><span>Kage<span>Stream</span></span></div><p>Descubra. Salve. Assista.</p></footer>
+    <header class="site-header" id="top">
+      <a class="brand" href="index.html#top" aria-label="KageStream início"><span class="brand-mark">K</span><span>Kage<span>Stream</span></span></a>
+      <nav class="main-nav" aria-label="Navegação principal">
+        <a href="index.html#top">Início</a><a href="index.html#trending">Populares</a><a href="index.html#new-releases">Lançamentos</a><a href="index.html#my-list">Minha lista</a><a href="about.html">Sobre</a><a href="blog.html">Blog</a><a href="contact.html">Contato</a><a href="admin.html">Admin</a>
+      </nav>
+      <form class="search-form" action="index.html" role="search"><label class="sr-only" for="about-search">Buscar anime</label><input id="about-search" name="q" type="search" placeholder="Buscar animes..." autocomplete="off" /><button type="submit" aria-label="Buscar">⌕</button></form>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">☰</button>
+    </header>
+    <main class="content-section">
+      <p class="eyebrow">SOBRE A KAGESTREAM</p>
+      <h1>Um catálogo para organizar o que assistir — não para hospedar o que não é nosso.</h1>
+      <p class="lead">A KageStream nasceu de um problema simples: encontrar o próximo anime certo dá mais trabalho do que deveria. O projeto resolve a parte da descoberta e da organização, deixando claro de onde vêm os dados e os vídeos.</p>
+      <div class="prose">
+        <h2>Como o catálogo é montado</h2>
+        <p>As informações de cada título — sinopse, nota, gêneros, ano e capa — vêm da <strong>Jikan API</strong>, uma API pública que espelha dados do MyAnimeList. O catálogo cresce e se atualiza automaticamente, sem reivindicar autoria sobre esse conteúdo informativo.</p>
+        <h2>De onde vêm os vídeos</h2>
+        <p>Diferente do catálogo, os vídeos não são buscados automaticamente: eles são cadastrados manualmente pelo administrador do site, usando links verificados.</p>
+        <ul class="plain"><li><strong>Vídeos próprios</strong> — conteúdo gravado, editado ou produzido pela equipe.</li><li><strong>Domínio público</strong> — obras cujos direitos autorais já expiraram.</li><li><strong>Conteúdo autorizado</strong> — embeds oficiais de plataformas e canais que permitem a incorporação do próprio player.</li></ul>
+        <div class="notice"><p>A KageStream não baixa, não re-hospeda e não distribui arquivos de vídeo de terceiros sem autorização. Quando um anime está disponível apenas em serviços licenciados, priorizamos o player oficial.</p></div>
+        <h2>O que fica salvo no seu navegador</h2>
+        <p>Favoritos, histórico de episódios e a lista “Minha lista” ficam guardados localmente usando o <code>localStorage</code>. Isso evita cadastro e rastreamento, mas significa que trocar de navegador ou aparelho começa a lista do zero.</p>
+        <h2>Por que um site estático</h2>
+        <p>A KageStream roda inteira no front-end e pode ser hospedada gratuitamente em GitHub Pages. Não há banco de dados pago nem backend para manter no ar; em troca, o cadastro de vídeos é manual.</p>
+        <h2>Perguntas diretas</h2>
+        <p><strong>Vocês hospedam os vídeos?</strong><br />Não. Vídeos próprios ficam em serviços externos; o restante é embed autorizado de outra plataforma.</p>
+        <p><strong>Posso pedir um anime?</strong><br />Sim — use a <a href="contact.html">página de contato</a>. Se houver uma fonte autorizada disponível para embed, o título entra na fila de cadastro.</p>
+        <p><strong>Encontrei um link quebrado?</strong><br />Avise pela página de contato com o nome do anime e o número do episódio.</p>
+      </div>
+      <a class="back-link" href="index.html#trending">Explorar o catálogo →</a>
+    </main>
+    <footer class="site-footer"><div class="brand"><span class="brand-mark">K</span><span>Kage<span>Stream</span></span></div><p>Catálogo via Jikan API · Vídeos próprios, de domínio público ou autorizados.</p></footer>
+    <script>document.getElementById('menu-toggle').onclick=()=>document.querySelector('.main-nav').classList.toggle('open');</script>
   </body>
 </html>
 
