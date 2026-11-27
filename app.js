@@ -35,6 +35,7 @@ function bindCards(container = document) { container.querySelectorAll('.anime-ca
 function escapeHtml(value = '') { return String(value).replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char])); }
 
 async function loadHome() {
+  if (!$('#season-grid')) return;
   ['season-grid', 'popular-grid', 'rated-grid', 'new-grid'].forEach(id => setSkeletons($(`#${id}`), id === 'new-grid' ? 8 : 6));
   try {
     const [seasonData, popularData, ratedData] = await Promise.all([api('/seasons/now?limit=12'), api('/top/anime?limit=12'), api('/top/anime?filter=favorite&limit=12')]);
@@ -45,7 +46,7 @@ async function loadHome() {
   renderPersonalSections();
 }
 function setHero(anime) { $('#hero-title').textContent = anime.title; $('#hero-copy').textContent = anime.synopsis; $('#hero-backdrop').style.backgroundImage = `url("${anime.trailer || anime.image}")`; $('#hero-meta').innerHTML = `<span>★ ${anime.score}</span><span>${anime.year}</span><span>${anime.type}</span><span>${anime.episodes || '?'} eps</span>`; $('#hero-watch').onclick = () => openDetails(anime.id); $('#hero-more').onclick = () => toggleFavorite(anime.id); }
-function renderPersonalSections() { const fav = favorites().map(id => state.anime.get(id)).filter(Boolean); $('#favorites-count').textContent = favorites().length; renderGrid('favorites-grid', fav); const watched = history().map(entry => state.anime.get(entry.id) || entry).filter(Boolean); $('#continue-watching').hidden = !watched.length; if (watched.length) renderGrid('history-grid', watched); }
+function renderPersonalSections() { if (!$('#favorites-grid')) return; const fav = favorites().map(id => state.anime.get(id)).filter(Boolean); $('#favorites-count').textContent = favorites().length; renderGrid('favorites-grid', fav); const watched = history().map(entry => state.anime.get(entry.id) || entry).filter(Boolean); $('#continue-watching').hidden = !watched.length; if (watched.length) renderGrid('history-grid', watched); }
 function toggleFavorite(id) { const list = favorites(); const index = list.indexOf(id); if (index >= 0) { list.splice(index, 1); showToast('Removido da sua lista.'); } else { list.unshift(id); showToast('Adicionado à sua lista.'); } storage.set('kage-favorites', list); refreshAllCards(); renderPersonalSections(); }
 function refreshAllCards() { $$('.anime-card').forEach(card => { const button = card.querySelector('[data-favorite]'); if (!button) return; const active = favorites().includes(Number(button.dataset.favorite)); button.classList.toggle('active', active); button.textContent = active ? '♥' : '♡'; }); }
 
@@ -61,10 +62,10 @@ function saveHistory(anime) { const list = history().filter(item => item.id !== 
 
 async function search(query) { const trimmed = query.trim(); if (!trimmed) { $('#search-section').hidden = true; return; } $('#search-section').hidden = false; $('#search-title').textContent = `Resultados para “${trimmed}”`; setSkeletons($('#search-grid'), 8); try { const data = await api(`/anime?q=${encodeURIComponent(trimmed)}&limit=12&sfw=true`); renderGrid('search-grid', remember(data.data.map(normalize))); } catch { $('#search-grid').innerHTML = '<div class="empty-state">Busca indisponível no momento. Tente novamente.</div>'; } }
 
-$('#search-form').addEventListener('submit', event => { event.preventDefault(); search($('#search-input').value); }); $('#search-input').addEventListener('input', event => { clearTimeout(state.searchTimer); state.searchTimer = setTimeout(() => search(event.target.value), 500); }); $('#clear-search').onclick = () => { $('#search-input').value = ''; $('#search-section').hidden = true; };
-$$('[data-close-modal]').forEach(element => element.addEventListener('click', closeDetails)); $('#close-player').onclick = closePlayer; $('#prev-episode').onclick = () => state.episodeIndex > 0 && loadEpisode(state.episodeIndex - 1); $('#next-episode').onclick = () => state.episodeIndex < (state.episodes.length - 1) && loadEpisode(state.episodeIndex + 1); $('#menu-toggle').onclick = () => $('.main-nav').classList.toggle('open'); $$('.carousel-controls button').forEach(button => button.onclick = () => { const row = $(`#${button.dataset.target}`); row.scrollBy({ left: Number(button.dataset.direction) * row.clientWidth * .8, behavior: 'smooth' }); });
+if ($('#search-form')) { $('#search-form').addEventListener('submit', event => { event.preventDefault(); search($('#search-input').value); }); $('#search-input').addEventListener('input', event => { clearTimeout(state.searchTimer); state.searchTimer = setTimeout(() => search(event.target.value), 500); }); $('#clear-search').onclick = () => { $('#search-input').value = ''; $('#search-section').hidden = true; }; }
+if ($('#close-player')) { $$('[data-close-modal]').forEach(element => element.addEventListener('click', closeDetails)); $('#close-player').onclick = closePlayer; $('#prev-episode').onclick = () => state.episodeIndex > 0 && loadEpisode(state.episodeIndex - 1); $('#next-episode').onclick = () => state.episodeIndex < (state.episodes.length - 1) && loadEpisode(state.episodeIndex + 1); $('#menu-toggle').onclick = () => $('.main-nav').classList.toggle('open'); $$('.carousel-controls button').forEach(button => button.onclick = () => { const row = $(`#${button.dataset.target}`); row.scrollBy({ left: Number(button.dataset.direction) * row.clientWidth * .8, behavior: 'smooth' }); }); }
 document.addEventListener('keydown', event => { if (event.key === 'Escape') { closeDetails(); closePlayer(); } });
-$('#contact-form').addEventListener('submit', event => { event.preventDefault(); event.currentTarget.reset(); showToast('Mensagem salva como demonstração. Conecte um serviço de formulários para receber envios.'); });
+if ($('#contact-form')) $('#contact-form').addEventListener('submit', event => { event.preventDefault(); event.currentTarget.reset(); showToast('Mensagem salva como demonstração. Conecte um serviço de formulários para receber envios.'); });
 loadHome();
 
 function localVideoLibrary() { return storage.get('kage-videos', {}); }
