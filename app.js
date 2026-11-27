@@ -6,7 +6,7 @@ const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 const storage = { get(key, fallback = []) { try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch { return fallback; } }, set(key, value) { localStorage.setItem(key, JSON.stringify(value)); } };
 function analyticsEvents() { return storage.get('kage-analytics', []); }
-function recordAnalytics(type, animeId, episode) { const events = analyticsEvents(); events.push({ type, animeId: Number(animeId), episode: Number(episode), at: Date.now() }); storage.set('kage-analytics', events.slice(-1000)); if (window.goatcounter?.count) window.goatcounter.count({ path: `play/mal-${animeId}/episode-${episode}`, title: `Play MAL ${animeId} · Episódio ${episode}`, event: true, no_session: true }); updateAdminDashboard(); }
+function recordAnalytics(type, animeId, episode) { const events = analyticsEvents(); events.push({ type, animeId: Number(animeId), episode: Number(episode), at: Date.now() }); storage.set('kage-analytics', events.slice(-1000)); if (window.umami?.track) window.umami.track('play_episode', { animeId: Number(animeId), episode: Number(episode), type }); updateAdminDashboard(); }
 const favorites = () => storage.get('kage-favorites');
 const history = () => storage.get('kage-history');
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
