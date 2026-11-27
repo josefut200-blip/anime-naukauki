@@ -1,14 +1,31 @@
 <!doctype html>
 <html lang="pt-BR">
   <head>
-    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Entre em contato com a KageStream e envie sugestões de animes para o catálogo." />
-    <link rel="stylesheet" href="style.css?v=4" /><title>Contato — KageStream</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contato — KageStream</title>
+    <meta name="description" content="Envie sugestões de anime, relate links quebrados ou fale com a equipe da KageStream." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css?v=4" />
   </head>
   <body class="static-page">
-    <header class="site-header"><a class="brand" href="index.html#top"><span class="brand-mark">K</span><span>Kage<span>Stream</span></span></a><nav class="main-nav" aria-label="Navegação principal"><a href="index.html#top">Início</a><a href="index.html#trending">Populares</a><a href="index.html#new-releases">Lançamentos</a><a href="index.html#my-list">Minha lista</a><a href="about.html">Sobre</a><a href="blog.html">Blog</a><a href="contact.html">Contato</a><a href="admin.html">Admin</a></nav><a class="button button-ghost" href="index.html">Voltar</a></header>
-    <main class="content-section"><p class="eyebrow">FALE COM A GENTE</p><h1>Tem uma sugestão para o catálogo?</h1><p class="lead">Envie uma sugestão de anime, uma ideia para a plataforma ou um comentário sobre sua experiência.</p><form class="contact-form" action="mailto:contato@kagestream.example" method="post" enctype="text/plain"><label for="contact-name">Seu nome</label><input id="contact-name" name="name" required placeholder="Como podemos chamar você?" /><label for="contact-email">Seu e-mail</label><input id="contact-email" name="email" type="email" required placeholder="voce@exemplo.com" /><label for="contact-message">Mensagem</label><textarea id="contact-message" name="message" rows="6" required placeholder="Qual anime não pode faltar?"></textarea><button class="button button-primary" type="submit">Enviar sugestão</button></form><div class="prose"><h2>Antes de enviar</h2><p>Para um formulário com recebimento real sem configurar servidor, conecte esta página a um serviço gratuito de formulários como Formspree ou Web3Forms.</p></div></main>
+    <header class="site-header" id="top">
+      <a class="brand" href="index.html#top" aria-label="KageStream início"><span class="brand-mark">K</span><span>Kage<span>Stream</span></span></a>
+      <nav class="main-nav" aria-label="Navegação principal"><a href="index.html#top">Início</a><a href="index.html#trending">Populares</a><a href="index.html#new-releases">Lançamentos</a><a href="index.html#my-list">Minha lista</a><a href="about.html">Sobre</a><a href="blog.html">Blog</a><a href="contact.html">Contato</a><a href="admin.html">Admin</a></nav>
+      <form class="search-form" action="index.html" role="search"><label class="sr-only" for="contact-search">Buscar anime</label><input id="contact-search" name="q" type="search" placeholder="Buscar animes..." autocomplete="off" /><button type="submit" aria-label="Buscar">⌕</button></form>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">☰</button>
+    </header>
+    <main class="content-section">
+      <p class="eyebrow">FALE COM A GENTE</p><h1>Tem uma sugestão para o catálogo?</h1><p class="lead">Pedidos de anime, links quebrados, ideias para a plataforma ou qualquer comentário sobre sua experiência — escolha o assunto e escreva direto.</p>
+      <div class="page-grid">
+        <form class="contact-form"><label for="subject">Assunto</label><select id="subject" name="subject"><option>Sugerir um anime</option><option>Reportar link quebrado</option><option>Ideia para a plataforma</option><option>Outro assunto</option></select><label for="name">Seu nome</label><input id="name" name="name" type="text" placeholder="Como podemos te chamar" /><label for="email">Seu e-mail</label><input id="email" name="email" type="email" placeholder="para responder sua mensagem" /><label for="message">Mensagem</label><textarea id="message" name="message" placeholder="Inclua o nome do anime ou o episódio"></textarea><button class="button button-primary" type="submit">Enviar mensagem</button></form>
+        <aside class="page-card"><h2>Antes de enviar</h2><p><strong>Pedindo um anime</strong><br />A sugestão entra na fila mais rápido quando existe uma fonte autorizada para embed.</p><p><strong>Reportando um link quebrado</strong><br />Inclua o nome do anime e o número do episódio.</p><p><strong>Tempo de resposta</strong><br />Este é um projeto mantido sem equipe dedicada; respostas podem levar alguns dias.</p></aside>
+      </div>
+      <div class="notice"><p>Este formulário é um protótipo visual. Para receber mensagens de verdade, conecte-o a um serviço gratuito como Formspree ou Web3Forms.</p></div>
+    </main>
     <footer class="site-footer"><div class="brand"><span class="brand-mark">K</span><span>Kage<span>Stream</span></span></div><p>Estamos ouvindo a comunidade.</p></footer>
+    <script>document.getElementById('menu-toggle').onclick=()=>document.querySelector('.main-nav').classList.toggle('open');document.querySelector('.contact-form').addEventListener('submit',event=>{event.preventDefault();alert('Formulário demonstrativo. Conecte um serviço gratuito para receber mensagens.');});</script>
   </body>
 </html>
 
