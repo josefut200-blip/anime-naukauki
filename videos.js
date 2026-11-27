@@ -4,6 +4,7 @@
   Tipos aceitos: mp4, m3u8 e iframe.
 */
 window.VIDEO_LIBRARY = {
+  51064: { 1: { type: 'iframe', src: 'https://www.youtube.com/embed/4aw4GCkYx7w?list=PLxqOAcaIKUc4-YZ7XM7c0usk132_C5aUH' } },
   // 5114: { 1: { type: 'mp4', src: 'https://seu-dominio.com/episodio-1.mp4' } },
   // 16498: { 1: { type: 'iframe', src: 'https://player.example.com/embed/episodio-1' } },
   // 20: { 1: { type: 'm3u8', src: 'https://seu-dominio.com/playlist.m3u8' } }
