@@ -1,3 +1,44 @@
+// BARREIRA CLIENT-SIDE: isto protege apenas contra acesso casual.
+// Não é segurança real: a senha fica visível no JavaScript entregue ao navegador.
+// TROQUE A SENHA AQUI quando quiser alterar a barreira do painel.
+const ADMIN_PASSWORD = 'adm12345';
+
+function setupAdminGate() {
+  if (!document.body.classList.contains('admin-page')) return;
+  const gate = document.querySelector('#admin-auth');
+  const form = document.querySelector('#admin-auth-form');
+  const passwordInput = document.querySelector('#admin-password');
+  const error = document.querySelector('#admin-auth-error');
+  if (!gate || !form || !passwordInput) return;
+
+  const unlock = () => {
+    document.body.classList.remove('admin-locked');
+    gate.hidden = true;
+    gate.setAttribute('aria-hidden', 'true');
+    passwordInput.value = '';
+  };
+
+  let alreadyUnlocked = false;
+  try { alreadyUnlocked = sessionStorage.getItem('kage-admin-auth') === '1'; } catch { /* armazenamento indisponível: pedir a senha nesta visita */ }
+  if (alreadyUnlocked) {
+    unlock();
+    return;
+  }
+
+  document.body.classList.add('admin-locked');
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (passwordInput.value.trim() === ADMIN_PASSWORD) {
+      try { sessionStorage.setItem('kage-admin-auth', '1'); } catch { /* desbloqueio válido apenas nesta visita */ }
+      unlock();
+      return;
+    }
+    error.hidden = false;
+    error.textContent = 'Senha incorreta.';
+    passwordInput.select();
+  });
+}
+
 const API = 'https://api.jikan.moe/v4';
 const PLACEHOLDER_VIDEO = 'https://storage.googleapis.com/coverr-main/mp4/Mt_Baker.mp4';
 const state = { anime: new Map(), current: null, episodes: [], episodeIndex: 0, player: null, hls: null, searchTimer: null };
@@ -30,6 +71,7 @@ function createPlyr(video) { return new Plyr(video, { controls: ['play-large', '
 function setSkeletons(container, count = 6) { container.innerHTML = Array.from({ length: count }, () => '<div class="skeleton skeleton-card"></div>').join(''); }
 function normalize(item) { return { id: item.mal_id, title: item.title_english || item.title || 'Anime sem título', japaneseTitle: item.title_japanese || '', image: item.images?.webp?.large_image_url || item.images?.jpg?.large_image_url || '', trailer: item.trailer?.images?.maximum_image_url || item.images?.webp?.large_image_url || '', synopsis: item.synopsis || 'Sinopse indisponível.', score: item.score ? item.score.toFixed(1) : '—', year: item.year || item.aired?.from?.slice(0, 4) || '—', episodes: item.episodes || 0, status: item.status || '—', genres: (item.genres || []).map(g => g.name), studios: (item.studios || []).map(s => s.name), type: item.type || 'TV' }; }
 function remember(items) { items.forEach(item => state.anime.set(item.id, item)); return items; }
+function catalogAnimeLibrary() { return Object.entries(window.CATALOGO || {}).map(([id, item]) => ({ id: Number(id), title: item.nome || 'Anime sem título', japaneseTitle: '', image: item.capa || '', trailer: item.banner || item.capa || '', synopsis: item.sinopse || 'Sinopse indisponível.', score: item.nota ? Number(item.nota).toFixed(1) : '—', year: item.ano || '—', episodes: item.episodios?.length || 0, status: 'Disponível', genres: item.tags || [], studios: [], type: 'TV' })); }
 function cardTemplate(anime) { const isFavorite = favorites().includes(anime.id); return `<article class="anime-card" data-id="${anime.id}" tabindex="0" aria-label="Ver detalhes de ${escapeHtml(anime.title)}"><div class="anime-poster"><img src="${anime.image}" alt="Capa de ${escapeHtml(anime.title)}" loading="lazy"><span class="card-rating">★ ${anime.score}</span><button class="favorite-toggle ${isFavorite ? 'active' : ''}" data-favorite="${anime.id}" aria-label="${isFavorite ? 'Remover' : 'Adicionar'} ${escapeHtml(anime.title)} ${isFavorite ? 'da' : 'à'} lista">${isFavorite ? '♥' : '♡'}</button></div><h3>${escapeHtml(anime.title)}</h3><p>${anime.year} · ${anime.type}</p></article>`; }
 function renderRow(id, items) { const container = $(`#${id}`); container.innerHTML = items.length ? items.map(cardTemplate).join('') : '<div class="empty-state">Nenhum título encontrado.</div>'; bindCards(container); }
 function renderGrid(id, items) { const container = $(`#${id}`); container.innerHTML = items.length ? items.map(cardTemplate).join('') : '<div class="empty-state">Sua lista está vazia. Adicione animes pelos cards.</div>'; bindCards(container); }
@@ -41,7 +83,7 @@ async function loadHome() {
   ['season-grid', 'popular-grid', 'rated-grid', 'new-grid'].forEach(id => setSkeletons($(`#${id}`), id === 'new-grid' ? 8 : 6));
   try {
     const [seasonData, popularData, ratedData] = await Promise.all([api('/seasons/now?limit=12'), api('/top/anime?limit=12'), api('/top/anime?filter=favorite&limit=12')]);
-    const season = remember(seasonData.data.map(normalize)); const radar = remember([PINNED_ANIME, ...season.filter(item => item.id !== PINNED_ANIME.id)]); const popular = remember(popularData.data.map(normalize)); const rated = remember(ratedData.data.map(normalize));
+    const season = remember(seasonData.data.map(normalize)); const registered = remember(catalogAnimeLibrary()); const radar = remember([PINNED_ANIME, ...registered, ...season.filter(item => item.id !== PINNED_ANIME.id)]); const popular = remember(popularData.data.map(normalize)); const rated = remember(ratedData.data.map(normalize));
     renderRow('season-grid', radar); renderRow('popular-grid', popular); renderRow('rated-grid', rated); renderGrid('new-grid', radar.slice().reverse());
     const hero = season[0] || popular[0]; if (hero) setHero(hero);
   } catch { ['season-grid', 'popular-grid', 'rated-grid', 'new-grid'].forEach(id => { $(`#${id}`).innerHTML = '<div class="empty-state">A Jikan demorou para responder. Recarregue a página em alguns segundos.</div>'; }); $('#hero-title').textContent = 'Seu próximo anime começa aqui'; $('#hero-copy').textContent = 'Não foi possível carregar o destaque agora.'; }
@@ -77,6 +119,7 @@ document.addEventListener('keydown', event => { if (event.key === 'Escape') { cl
 if ($('#next-episode-card')) $('#next-episode-card').onclick = () => { if (state.episodeIndex < state.episodes.length - 1) loadEpisode(state.episodeIndex + 1); };
 document.addEventListener('click', event => { if (event.target.closest('#details-play, #next-episode-card') && state.current) recordAnalytics('play', state.current.id, episodeNumber()); });
 if ($('#contact-form')) $('#contact-form').addEventListener('submit', event => { event.preventDefault(); event.currentTarget.reset(); showToast('Mensagem salva como demonstração. Conecte um serviço de formulários para receber envios.'); });
+setupAdminGate();
 loadHome();
 
 function localVideoLibrary() { return storage.get('kage-videos', {}); }

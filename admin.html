@@ -11,9 +11,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css?v=7" />
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <style>.admin-real-analytics{grid-column:1 / -1}.real-analytics-card{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:24px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(135deg,rgba(242,132,60,.14),rgba(14,15,19,.72))}.real-analytics-card strong{display:block;font-size:16px}.real-analytics-card span{display:block;margin-top:6px;color:var(--muted);font-size:12px}.real-analytics-card .text-link{display:inline-flex;flex:0 0 auto;align-items:center;padding:11px 15px;border-radius:9px;background:var(--accent);color:#1b120d;font-weight:800;font-size:12px}@media(max-width:600px){.real-analytics-card{align-items:flex-start;flex-direction:column}.real-analytics-card .text-link{width:100%;justify-content:center}}</style>
+    <style>.admin-real-analytics{grid-column:1 / -1}.real-analytics-card{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:24px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(135deg,rgba(242,132,60,.14),rgba(14,15,19,.72))}.real-analytics-card strong{display:block;font-size:16px}.real-analytics-card span{display:block;margin-top:6px;color:var(--muted);font-size:12px}.real-analytics-card .text-link{display:inline-flex;flex:0 0 auto;align-items:center;padding:11px 15px;border-radius:9px;background:var(--accent);color:#1b120d;font-weight:800;font-size:12px}.admin-auth-screen{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 20% 0,rgba(242,132,60,.22),transparent 42%),#0e0f13}.admin-auth-screen[hidden]{display:none}.admin-auth-card{width:min(100%,420px);padding:30px;border:1px solid var(--line);border-radius:16px;background:#17181e;box-shadow:0 24px 80px #0009}.admin-auth-card h1{margin:8px 0}.admin-auth-card p{color:var(--muted)}.admin-auth-card label{display:block;margin:22px 0 8px;font-weight:700}.admin-auth-card input{width:100%;padding:13px;border:1px solid var(--line);border-radius:9px;background:#0e0f13;color:var(--text)}.admin-auth-card button{width:100%;margin-top:18px}.admin-auth-error{color:#ff9d7a!important}.admin-locked{overflow:hidden}.admin-locked .site-header,.admin-locked .admin-main,.admin-locked .site-footer{visibility:hidden}.admin-publish-notice{margin:0 0 22px;padding:18px 20px;border:1px solid rgba(242,132,60,.45);border-radius:12px;background:rgba(242,132,60,.09)}.admin-publish-notice h2{margin:0 0 10px;font-size:16px}.admin-publish-notice ol{margin:0;padding-left:20px;color:var(--muted)}.admin-publish-notice li+li{margin-top:7px}.admin-publish-notice strong{color:var(--text)}@media(max-width:600px){.real-analytics-card{align-items:flex-start;flex-direction:column}.real-analytics-card .text-link{width:100%;justify-content:center}}</style>
   </head>
-  <body class="admin-page">
+  <body class="admin-page admin-locked">
+    <div class="admin-auth-screen" id="admin-auth" role="dialog" aria-modal="true" aria-labelledby="admin-auth-title">
+      <form class="admin-auth-card" id="admin-auth-form">
+        <p class="eyebrow">ÁREA RESTRITA</p>
+        <h1 id="admin-auth-title">Acesso administrativo</h1>
+        <p>Digite a senha para abrir o painel KageStream.</p>
+        <label for="admin-password">Senha administrativa</label>
+        <input id="admin-password" type="password" autocomplete="current-password" required autofocus />
+        <p class="admin-auth-error" id="admin-auth-error" role="alert" hidden>Senha incorreta.</p>
+        <button class="button button-primary" type="submit">Entrar no painel</button>
+      </form>
+    </div>
     <header class="site-header admin-header">
       <form class="search-form admin-search" role="search"><label class="sr-only" for="admin-search">Buscar no painel</label><input id="admin-search" type="search" placeholder="Buscar no painel..." /><button type="button" aria-label="Buscar">⌕</button></form><div class="admin-user-tools"><button class="admin-bell" type="button" aria-label="Notificações">♧<span></span></button><div class="admin-avatar">J</div><span class="admin-user-name">Administrador⌄</span><a class="button button-ghost" href="index.html">← Home</a></div>
     </header>
@@ -27,6 +38,7 @@
       <section class="content-section admin-section" id="admin">
         <div class="section-heading"><div><p class="eyebrow">PAINEL DE ADMINISTRAÇÃO</p><h1>Cadastrar e corrigir vídeos</h1></div><button class="button button-ghost" id="export-videos" type="button">Exportar JSON</button></div>
         <div class="admin-warning">Use este painel para corrigir o anime, o episódio ou o código iframe. Os dados ficam salvos somente neste navegador.</div>
+        <div class="admin-publish-notice" role="note"><h2>Como publicar o catálogo</h2><ol><li>Cadastre ou edite o anime e os episódios neste painel.</li><li>Clique em <strong>Exportar catálogo</strong> ou exporte o <code>catalogo.js</code> conforme o botão disponível.</li><li>Substitua o arquivo exportado no repositório GitHub.</li><li>Faça commit e aguarde alguns minutos pela atualização do GitHub Pages.</li></ol><p><strong>Importante:</strong> o cadastro local não altera o site público até o arquivo exportado ser commitado.</p></div>
         <form class="admin-form" id="admin-form">
           <label for="admin-anime-id">ID do anime no MyAnimeList</label><input id="admin-anime-id" type="number" min="1" required placeholder="Ex.: 51064" />
           <label for="admin-episode">Número do episódio</label><input id="admin-episode" type="number" min="1" required placeholder="Ex.: 1" />
@@ -53,7 +65,7 @@
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <footer class="site-footer"><div class="brand"><span class="brand-mark">K</span><span>Kage<span>Stream</span></span></div><p>Painel local de administração.</p></footer>
-    <script src="videos.js?v=6"></script><script src="app.js?v=14" type="module"></script><script defer src="https://cloud.umami.is/script.js" data-website-id="85681ccf-8569-413c-8c73-080b7ec7d2c8"></script>
+    <script src="videos.js?v=6"></script><script src="catalogo.js?v=1"></script><script src="app.js?v=18"></script><script defer src="https://cloud.umami.is/script.js" data-website-id="85681ccf-8569-413c-8c73-080b7ec7d2c8"></script>
   </body>
 </html>
 
