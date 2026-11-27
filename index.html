@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="KageStream: descubra, acompanhe e assista animes em uma experiência de streaming estática e gratuita." />
+    <meta name="theme-color" content="#0b0c10" />
+    <title>KageStream — seu universo de animes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  </head>
+  <body>
+    <header class="site-header" id="top">
+      <a class="brand" href="#top" aria-label="KageStream início"><span class="brand-mark">K</span><span>Kage<span>Stream</span></span></a>
+      <nav class="main-nav" aria-label="Navegação principal">
+        <a href="#top">Início</a><a href="#trending">Populares</a><a href="#new-releases">Lançamentos</a><a href="#my-list">Minha lista <span class="count-badge" id="favorites-count">0</span></a><a href="#about">Sobre</a><a href="#blog">Blog</a><a href="#contact">Contato</a>
+      </nav>
+      <form class="search-form" id="search-form" role="search">
+        <label class="sr-only" for="search-input">Buscar anime</label>
+        <input id="search-input" type="search" placeholder="Buscar animes..." autocomplete="off" />
+        <button type="submit" aria-label="Buscar">⌕</button>
+      </form>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">☰</button>
+    </header>
+
+    <main>
+      <section class="hero" id="hero" aria-labelledby="hero-title">
+        <div class="hero-backdrop" id="hero-backdrop"></div>
+        <div class="hero-content">
+          <p class="eyebrow">KAGESTREAM ORIGINAL DISCOVERY</p>
+          <h1 id="hero-title">Carregando destaque...</h1>
+          <p class="hero-copy" id="hero-copy">Buscando o melhor da temporada para você.</p>
+          <div class="hero-meta" id="hero-meta"></div>
+          <div class="hero-actions"><button class="button button-primary" id="hero-watch">▶ Assistir agora</button><button class="button button-ghost" id="hero-more">＋ Minha lista</button></div>
+        </div>
+        <div class="hero-fade"></div>
+      </section>
+
+      <section class="content-section" id="search-section" hidden>
+        <div class="section-heading"><div><p class="eyebrow">RESULTADOS</p><h2 id="search-title">Buscar</h2></div><button class="text-button" id="clear-search">Limpar busca</button></div>
+        <div class="anime-grid" id="search-grid"></div>
+      </section>
+
+      <section class="content-section" id="trending"><div class="section-heading"><div><p class="eyebrow">AGORA NO RADAR</p><h2>Em alta na temporada</h2></div><div class="carousel-controls"><button data-target="season-grid" data-direction="-1" aria-label="Anterior">‹</button><button data-target="season-grid" data-direction="1" aria-label="Próximo">›</button></div></div><div class="anime-row" id="season-grid" data-loading="true"></div></section>
+      <section class="content-section" id="popular"><div class="section-heading"><div><p class="eyebrow">O QUE TODO MUNDO VÊ</p><h2>Mais populares</h2></div><div class="carousel-controls"><button data-target="popular-grid" data-direction="-1" aria-label="Anterior">‹</button><button data-target="popular-grid" data-direction="1" aria-label="Próximo">›</button></div></div><div class="anime-row" id="popular-grid" data-loading="true"></div></section>
+      <section class="content-section" id="top-rated"><div class="section-heading"><div><p class="eyebrow">NOTAS QUE VALEM O PLAY</p><h2>Melhores avaliados</h2></div><div class="carousel-controls"><button data-target="rated-grid" data-direction="-1" aria-label="Anterior">‹</button><button data-target="rated-grid" data-direction="1" aria-label="Próximo">›</button></div></div><div class="anime-row" id="rated-grid" data-loading="true"></div></section>
+      <section class="content-section" id="new-releases"><div class="section-heading"><div><p class="eyebrow">ACABOU DE CHEGAR</p><h2>Lançamentos recentes</h2></div></div><div class="anime-grid compact" id="new-grid" data-loading="true"></div></section>
+      <section class="content-section" id="my-list"><div class="section-heading"><div><p class="eyebrow">SALVOS NO SEU NAVEGADOR</p><h2>Minha lista</h2></div></div><div class="anime-grid compact" id="favorites-grid"></div></section>
+      <section class="content-section" id="continue-watching" hidden><div class="section-heading"><div><p class="eyebrow">VOLTE DE ONDE PAROU</p><h2>Continuar assistindo</h2></div></div><div class="anime-grid compact" id="history-grid"></div></section>
+      <section class="info-section content-section" id="about"><div class="info-copy"><p class="eyebrow">SOBRE A KAGESTREAM</p><h2>Seu próximo mundo favorito está a um play.</h2><p>A KageStream é uma interface estática para descobrir animes, organizar favoritos e continuar assistindo sem depender de uma conta ou de um servidor pago. O catálogo é atualizado pela Jikan API e os vídeos são cadastrados localmente pelo administrador do projeto.</p><div class="feature-list"><div><span>01</span><strong>Descoberta inteligente</strong><p>Temporada, popularidade, notas e busca em um só lugar.</p></div><div><span>02</span><strong>Seu espaço pessoal</strong><p>Favoritos e histórico ficam salvos no seu navegador.</p></div><div><span>03</span><strong>Feito para a web aberta</strong><p>Hospede grátis em GitHub Pages, Netlify ou Vercel.</p></div></div></div><div class="info-art"><span>K</span><small>WATCH. SAVE. REPEAT.</small></div></section>
+      <section class="content-section" id="blog"><div class="section-heading"><div><p class="eyebrow">NOTAS DO UNIVERSO OTAKU</p><h2>Do radar para a sua watchlist</h2></div></div><div class="blog-grid"><article class="blog-card"><div class="blog-number">01</div><p class="eyebrow">GUIA</p><h3>Como escolher seu próximo anime sem cair no endless scroll</h3><p>Use notas, gêneros e o clima da temporada para encontrar histórias que combinam com você.</p><a href="#trending">Explorar a temporada →</a></article><article class="blog-card"><div class="blog-number">02</div><p class="eyebrow">COMUNIDADE</p><h3>Favoritos: monte uma lista que realmente dá vontade de assistir</h3><p>Salve títulos agora e deixe o localStorage fazer o trabalho de lembrar seus próximos plays.</p><a href="#my-list">Ver minha lista →</a></article><article class="blog-card"><div class="blog-number">03</div><p class="eyebrow">TECNOLOGIA</p><h3>Streaming estático: o que cabe em um site sem backend pago</h3><p>Uma arquitetura simples pode unir catálogo, player e experiência premium no navegador.</p><a href="#about">Conhecer o projeto →</a></article></div></section>
+      <section class="content-section contact-section" id="contact"><div><p class="eyebrow">FALE COM A GENTE</p><h2>Tem uma sugestão para o catálogo?</h2><p class="muted-copy">Este formulário é um ponto de partida visual. Para receber mensagens de verdade, conecte-o depois a um serviço gratuito de formulários.</p></div><form class="contact-form" id="contact-form"><label for="contact-name">Seu nome</label><input id="contact-name" name="name" required placeholder="Como podemos chamar você?" /><label for="contact-email">Seu e-mail</label><input id="contact-email" name="email" type="email" required placeholder="voce@exemplo.com" /><label for="contact-message">Mensagem</label><textarea id="contact-message" name="message" rows="4" required placeholder="Qual anime não pode faltar?"></textarea><button class="button button-primary" type="submit">Enviar sugestão</button></form></section>
+    </main>
+
+    <div class="modal-shell" id="details-modal" aria-hidden="true"><div class="modal-backdrop" data-close-modal></div><article class="details-modal" role="dialog" aria-modal="true" aria-labelledby="details-title"><button class="modal-close" data-close-modal aria-label="Fechar">×</button><div class="details-cover" id="details-cover"></div><div class="details-body"><div class="details-heading"><div><p class="eyebrow">DETALHES DO ANIME</p><h2 id="details-title">—</h2><div class="details-meta" id="details-meta"></div></div><button class="button button-primary" id="details-play">▶ Assistir</button></div><p id="details-synopsis"></p><div class="tag-list" id="details-tags"></div><div class="episode-header"><h3>Episódios</h3><span id="episode-status"></span></div><div class="episode-list" id="episode-list"></div></div></article></div>
+
+    <section class="player-view" id="player-view" aria-hidden="true"><div class="player-topbar"><button class="icon-button" id="close-player">← Voltar</button><div><p class="eyebrow">REPRODUZINDO AGORA</p><h2 id="player-title">—</h2></div><button class="icon-button" id="player-favorite">♡</button></div><div class="player-stage"><video id="video-player" controls playsinline></video><iframe id="video-iframe" title="Player externo" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen hidden></iframe><div class="player-placeholder" id="player-placeholder" hidden><div class="placeholder-icon">▶</div><h3>Vídeo de exemplo</h3><p>Cadastre um link autorizado em <code>videos.js</code> para este episódio.</p></div></div><div class="player-controls"><button class="button button-ghost" id="prev-episode">← Anterior</button><label class="episode-select-label" for="player-episode-select">Episódio<select id="player-episode-select"></select></label><button class="button button-ghost" id="next-episode">Próximo →</button></div><p class="player-note">Use apenas vídeos próprios, de domínio público ou devidamente autorizados.</p></section>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <footer class="site-footer"><div class="brand"><span class="brand-mark">K</span><span>Kage<span>Stream</span></span></div><p>Catálogo alimentado pela Jikan API. Projeto estático para fins demonstrativos.</p></footer>
+    <script src="videos.js"></script><script src="app.js" type="module"></script>
+  </body>
+</html>
