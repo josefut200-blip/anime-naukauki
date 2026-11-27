@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Painel de administração do KageStream." />
+    <meta name="theme-color" content="#0b0c10" />
+    <title>Painel de Administração — KageStream</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css?v=4" />
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  </head>
+  <body class="admin-page">
+    <header class="site-header admin-header">
+      <a class="brand" href="index.html#top" aria-label="KageStream início"><span class="brand-mark">K</span><span>Kage<span>Stream</span></span></a>
+      <a class="button button-ghost" href="index.html">← Voltar para a Home</a>
+    </header>
+
+    <main class="admin-main">
+      <section class="content-section admin-section" id="admin">
+        <div class="section-heading"><div><p class="eyebrow">PAINEL DE ADMINISTRAÇÃO</p><h1>Cadastrar e corrigir vídeos</h1></div><button class="button button-ghost" id="export-videos" type="button">Exportar JSON</button></div>
+        <div class="admin-warning">Use este painel para corrigir o anime, o episódio ou o código iframe. Os dados ficam salvos somente neste navegador.</div>
+        <form class="admin-form" id="admin-form">
+          <label for="admin-anime-id">ID do anime no MyAnimeList</label><input id="admin-anime-id" type="number" min="1" required placeholder="Ex.: 51064" />
+          <label for="admin-episode">Número do episódio</label><input id="admin-episode" type="number" min="1" required placeholder="Ex.: 1" />
+          <label for="admin-type">Tipo de vídeo</label><select id="admin-type"><option value="mp4">MP4 direto</option><option value="m3u8">M3U8 / HLS</option><option value="iframe">Iframe externo</option></select>
+          <label for="admin-src">Código iframe ou URL autorizada</label><textarea id="admin-src" rows="5" required placeholder="Cole aqui o código completo do iframe ou uma URL direta .mp4/.m3u8"></textarea>
+          <button class="button button-primary" type="submit">Salvar vídeo</button>
+        </form>
+        <div class="admin-list-wrap"><div class="episode-header"><h2>Vídeos cadastrados</h2><button class="text-button" id="clear-videos" type="button">Limpar todos</button></div><div class="admin-list" id="admin-list"></div></div>
+      </section>
+
+      <section class="content-section catalog-wizard" id="catalog-admin">
+        <div class="section-heading"><div><p class="eyebrow">CATÁLOGO</p><h2>Cadastrar novo anime</h2></div><button class="button button-ghost" id="export-catalog" type="button">Exportar catálogo</button></div>
+        <div class="wizard-steps"><span class="active">1. Anime</span><span>2. Aparência</span><span>3. Episódio</span></div>
+        <form class="catalog-form" id="catalog-form">
+          <div class="form-step"><h3>1. Informações principais</h3><p class="muted-copy">Preencha os dados que aparecerão no card e na página de detalhes.</p><div class="form-grid"><label>Nome do anime<input id="catalog-title" required placeholder="Ex.: Black Clover" /></label><label>ID no MyAnimeList<input id="catalog-mal-id" type="number" min="1" required placeholder="Ex.: 34798" /></label><label>Ano de lançamento<input id="catalog-year" type="number" min="1900" max="2100" required placeholder="Ex.: 2017" /></label><label>Nota<input id="catalog-score" type="number" min="0" max="10" step="0.1" placeholder="Ex.: 8.1" /></label><label class="full-field">Tags / gêneros<input id="catalog-genres" placeholder="Ação, Fantasia, Shounen" /></label><label class="full-field">Sinopse<textarea id="catalog-synopsis" rows="4" placeholder="Escreva uma breve sinopse..."></textarea></label></div></div>
+          <div class="form-step"><h3>2. Imagens</h3><p class="muted-copy">A capa aparece nos cards e o banner no destaque.</p><div class="form-grid"><label>URL da capa<input id="catalog-cover" type="url" required placeholder="https://.../capa.jpg" /></label><label>URL do banner<input id="catalog-banner" type="url" placeholder="https://.../banner.jpg" /></label></div><div class="catalog-preview" id="catalog-preview"><span>Prévia da capa</span></div></div>
+          <div class="form-step"><h3>3. Primeiro episódio</h3><p class="muted-copy">Cole uma URL direta ou o código completo de um iframe autorizado.</p><div class="form-grid"><label>Número do episódio<input id="catalog-episode" type="number" min="1" value="1" required /></label><label>Tipo de player<select id="catalog-video-type"><option value="iframe">Iframe externo</option><option value="mp4">MP4 direto</option><option value="m3u8">M3U8 / HLS</option></select></label><label class="full-field">Código iframe ou URL autorizada<textarea id="catalog-video-src" rows="5" required placeholder="Cole aqui o código completo do iframe ou uma URL direta .mp4/.m3u8"></textarea></label></div></div>
+          <button class="button button-primary" type="submit">Salvar anime e episódio</button>
+        </form>
+        <div class="catalog-list" id="catalog-list"></div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <footer class="site-footer"><div class="brand"><span class="brand-mark">K</span><span>Kage<span>Stream</span></span></div><p>Painel local de administração.</p></footer>
+    <script src="videos.js?v=6"></script><script src="app.js?v=6" type="module"></script>
+  </body>
+</html>
+
