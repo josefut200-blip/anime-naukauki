@@ -1,6 +1,7 @@
 const API = 'https://api.jikan.moe/v4';
 const PLACEHOLDER_VIDEO = 'https://storage.googleapis.com/coverr-main/mp4/Mt_Baker.mp4';
 const state = { anime: new Map(), current: null, episodes: [], episodeIndex: 0, player: null, hls: null, searchTimer: null };
+const PINNED_ANIME = { id: 51064, title: 'Black Summoner', japaneseTitle: '黒の召喚士', image: 'https://i.ytimg.com/vi/4aw4GCkYx7w/hqdefault.jpg', trailer: 'https://i.ytimg.com/vi/4aw4GCkYx7w/maxresdefault.jpg', synopsis: 'Kelvin desperta em um novo mundo sem memórias, mas com habilidades de invocador e uma paixão por batalhas.', score: '6.8', year: '2022', episodes: 12, status: 'Finished Airing', genres: ['Action', 'Adventure', 'Fantasy'], studios: ['Satelight'], type: 'TV' };
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 const storage = { get(key, fallback = []) { try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch { return fallback; } }, set(key, value) { localStorage.setItem(key, JSON.stringify(value)); } };
@@ -32,8 +33,8 @@ async function loadHome() {
   ['season-grid', 'popular-grid', 'rated-grid', 'new-grid'].forEach(id => setSkeletons($(`#${id}`), id === 'new-grid' ? 8 : 6));
   try {
     const [seasonData, popularData, ratedData] = await Promise.all([api('/seasons/now?limit=12'), api('/top/anime?limit=12'), api('/top/anime?filter=favorite&limit=12')]);
-    const season = remember(seasonData.data.map(normalize)); const popular = remember(popularData.data.map(normalize)); const rated = remember(ratedData.data.map(normalize));
-    renderRow('season-grid', season); renderRow('popular-grid', popular); renderRow('rated-grid', rated); renderGrid('new-grid', season.slice().reverse());
+    const season = remember(seasonData.data.map(normalize)); const radar = remember([PINNED_ANIME, ...season.filter(item => item.id !== PINNED_ANIME.id)]); const popular = remember(popularData.data.map(normalize)); const rated = remember(ratedData.data.map(normalize));
+    renderRow('season-grid', radar); renderRow('popular-grid', popular); renderRow('rated-grid', rated); renderGrid('new-grid', radar.slice().reverse());
     const hero = season[0] || popular[0]; if (hero) setHero(hero);
   } catch { ['season-grid', 'popular-grid', 'rated-grid', 'new-grid'].forEach(id => { $(`#${id}`).innerHTML = '<div class="empty-state">A Jikan demorou para responder. Recarregue a página em alguns segundos.</div>'; }); $('#hero-title').textContent = 'Seu próximo anime começa aqui'; $('#hero-copy').textContent = 'Não foi possível carregar o destaque agora.'; }
   renderPersonalSections();
