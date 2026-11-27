@@ -28,5 +28,16 @@ A senha do painel é uma barreira client-side contra acesso casual. Como o site 
 
 ## Migração futura para dados compartilhados
 
-Para permitir que vídeos, favoritos, usuários e permissões sejam compartilhados entre dispositivos sem commit manual, o projeto pode migrar para um backend gratuito ou com camada gratuita, como Firebase (Authentication + Firestore/Storage) ou Supabase (Auth + Postgres + Storage). O plano recomendado é: criar autenticação de administrador, mover o catálogo para uma tabela/coleção, validar URLs no servidor, trocar o `localStorage` por consultas autenticadas e manter o GitHub Pages apenas como front-end. Essa migração não está implementada neste momento.
+Para permitir que vídeos, favoritos, usuários e permissões sejam compartilhados entre dispositivos sem commit manual, o projeto pode migrar para um backend gratuito ou com camada gratuita, como Firebase (Authentication + Firestore/Storage) ou Supabase (Auth + Postgres + Storage). O plano recomendado é: criar autenticação de administrador, mover o catálogo para uma tabela/coleção, validar URLs no servidor, trocar o `localStorage` por consultas autenticadas e manter o GitHub Pages apenas como front-end.
+
+## Supabase: catálogo compartilhado
+
+O projeto agora contém a base da integração com Supabase. Para ativá-la:
+
+1. Crie um projeto Supabase e execute o arquivo `supabase.sql` no SQL Editor.
+2. Crie o usuário administrador em Authentication → Users e desative o cadastro público.
+3. Preencha `supabase-config.js` com a Project URL e a chave anon/publishable pública. Nunca use a `service_role` key no front-end.
+4. Publique os arquivos no GitHub Pages. O login do admin e os novos cadastros passarão a usar o banco compartilhado.
+
+Com o Supabase configurado, visitantes leem `series` e `episodios` imediatamente e o admin grava novos animes e episódios sem exportar `catalogo.js`. O `catalogo.js` continua como fallback estático durante a migração.
 

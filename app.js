@@ -1,15 +1,13 @@
-// BARREIRA CLIENT-SIDE: isto protege apenas contra acesso casual.
-// Não é segurança real: a senha fica visível no JavaScript entregue ao navegador.
-// TROQUE A SENHA AQUI quando quiser alterar a barreira do painel.
-const ADMIN_PASSWORD = 'adm12345';
-
-function setupAdminGate() {
+// O acesso administrativo agora usa Supabase Auth quando configurado.
+// O site continua estático; a proteção real depende das políticas RLS do Supabase.
+async function setupAdminGate() {
   if (!document.body.classList.contains('admin-page')) return;
   const gate = document.querySelector('#admin-auth');
   const form = document.querySelector('#admin-auth-form');
+  const emailInput = document.querySelector('#admin-email');
   const passwordInput = document.querySelector('#admin-password');
   const error = document.querySelector('#admin-auth-error');
-  if (!gate || !form || !passwordInput) return;
+  if (!gate || !form || !emailInput || !passwordInput) return;
 
   const unlock = () => {
     document.body.classList.remove('admin-locked');
@@ -18,24 +16,29 @@ function setupAdminGate() {
     passwordInput.value = '';
   };
 
-  let alreadyUnlocked = false;
-  try { alreadyUnlocked = sessionStorage.getItem('kage-admin-auth') === '1'; } catch { /* armazenamento indisponível: pedir a senha nesta visita */ }
-  if (alreadyUnlocked) {
+  if (!window.kageDB?.configured) {
+    error.hidden = false;
+    error.textContent = 'Configure o Supabase em supabase-config.js para entrar no painel.';
+    return;
+  }
+
+  if (await window.kageDB.estaLogado()) {
     unlock();
     return;
   }
 
   document.body.classList.add('admin-locked');
-  form.addEventListener('submit', (event) => {
+  form.addEventListener('submit', async (event) => {
     event.preventDefault();
-    if (passwordInput.value.trim() === ADMIN_PASSWORD) {
-      try { sessionStorage.setItem('kage-admin-auth', '1'); } catch { /* desbloqueio válido apenas nesta visita */ }
+    error.hidden = true;
+    try {
+      await window.kageDB.entrar(emailInput.value.trim(), passwordInput.value);
       unlock();
-      return;
+    } catch (loginError) {
+      error.hidden = false;
+      error.textContent = loginError.message || 'Não foi possível entrar.';
+      passwordInput.select();
     }
-    error.hidden = false;
-    error.textContent = 'Senha incorreta.';
-    passwordInput.select();
   });
 }
 
@@ -66,12 +69,41 @@ function showToast(message) { const toast = $('#toast'); toast.textContent = mes
 function extractEmbedSource(value = '') { const cleaned = String(value).trim().replaceAll('\\/', '/').replaceAll('&amp;', '&'); const match = cleaned.match(/<iframe\b[^>]*\bsrc\s*=\s*["']([^"']+)["']/i); return (match ? match[1] : cleaned).trim(); }
 function upgradeEmbedFields() { [{ id: 'admin-src', label: 'Código iframe ou URL autorizada' }, { id: 'catalog-video-src', label: 'Código iframe ou URL autorizada' }].forEach(({ id, label }) => { const current = $(`#${id}`); if (!current || current.tagName === 'TEXTAREA') return; const area = document.createElement('textarea'); area.id = id; area.rows = 5; area.required = current.required; area.placeholder = 'Cole aqui o código completo do iframe ou uma URL direta .mp4/.m3u8'; current.replaceWith(area); const labelElement = current.closest('label') || document.querySelector(`label[for="${id}"]`); if (labelElement?.firstChild) labelElement.firstChild.textContent = label; }); }
 upgradeEmbedFields();
+document.addEventListener('submit', async (event) => {
+  if (!window.kageDB?.configured || !document.body.classList.contains('admin-page')) return;
+  if (event.target.id !== 'catalog-form') return;
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  const form = event.target;
+  const videoUrl = extractEmbedSource($('#catalog-video-src').value);
+  try {
+    const serie = await window.kageDB.salvarSerie({ titulo: $('#catalog-title').value.trim(), capa_url: $('#catalog-cover').value.trim(), banner_url: $('#catalog-banner').value.trim(), sinopse: $('#catalog-synopsis').value.trim(), ano: Number($('#catalog-year').value) || null, tags: $('#catalog-genres').value.split(',').map(tag => tag.trim()).filter(Boolean) });
+    await window.kageDB.salvarEpisodio({ serie_id: serie.id, numero: Number($('#catalog-episode').value), titulo: `${serie.titulo} · Episódio ${$('#catalog-episode').value}`, video_url: videoUrl });
+    form.reset();
+    showToast('Anime e episódio publicados imediatamente.');
+    await loadHome();
+  } catch (saveError) { showToast(saveError.message || 'Não foi possível salvar no Supabase.'); }
+}, true);
+document.addEventListener('submit', async (event) => {
+  if (!window.kageDB?.configured || !document.body.classList.contains('admin-page') || event.target.id !== 'admin-form') return;
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  try {
+    const animeId = Number($('#admin-anime-id').value);
+    const remote = (await window.kageDB.listarCatalogo()).find(item => Number(item.id) === animeId);
+    if (!remote) throw new Error('Cadastre o anime antes de adicionar episódios.');
+    await window.kageDB.salvarEpisodio({ serie_id: remote.id, numero: Number($('#admin-episode').value), titulo: `Episódio ${$('#admin-episode').value}`, video_url: extractEmbedSource($('#admin-src').value) });
+    event.target.reset();
+    showToast('Episódio publicado imediatamente.');
+  } catch (saveError) { showToast(saveError.message || 'Não foi possível salvar o episódio.'); }
+}, true);
 function normalizeEmbedUrl(source) { try { const url = new URL(source); const isYouTube = /(^|\.)youtube\.com$|(^|\.)youtube-nocookie\.com$/.test(url.hostname); if (!isYouTube || !url.pathname.startsWith('/embed/')) return source; url.hostname = 'www.youtube-nocookie.com'; url.searchParams.set('controls', '1'); url.searchParams.set('modestbranding', '1'); url.searchParams.set('rel', '0'); url.searchParams.set('iv_load_policy', '3'); url.searchParams.set('playsinline', '1'); url.searchParams.set('fs', '0'); return url.toString(); } catch { return source; } }
 function createPlyr(video) { return new Plyr(video, { controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings'], settings: ['captions', 'quality'], tooltips: { controls: true }, keyboard: { focused: true, global: false } }); }
 function setSkeletons(container, count = 6) { container.innerHTML = Array.from({ length: count }, () => '<div class="skeleton skeleton-card"></div>').join(''); }
 function normalize(item) { return { id: item.mal_id, title: item.title_english || item.title || 'Anime sem título', japaneseTitle: item.title_japanese || '', image: item.images?.webp?.large_image_url || item.images?.jpg?.large_image_url || '', trailer: item.trailer?.images?.maximum_image_url || item.images?.webp?.large_image_url || '', synopsis: item.synopsis || 'Sinopse indisponível.', score: item.score ? item.score.toFixed(1) : '—', year: item.year || item.aired?.from?.slice(0, 4) || '—', episodes: item.episodes || 0, status: item.status || '—', genres: (item.genres || []).map(g => g.name), studios: (item.studios || []).map(s => s.name), type: item.type || 'TV' }; }
 function remember(items) { items.forEach(item => state.anime.set(item.id, item)); return items; }
 function catalogAnimeLibrary() { return Object.entries(window.CATALOGO || {}).map(([id, item]) => ({ id: Number(id), title: item.nome || 'Anime sem título', japaneseTitle: '', image: item.capa || '', trailer: item.banner || item.capa || '', synopsis: item.sinopse || 'Sinopse indisponível.', score: item.nota ? Number(item.nota).toFixed(1) : '—', year: item.ano || '—', episodes: item.episodios?.length || 0, status: 'Disponível', genres: item.tags || [], studios: [], type: 'TV' })); }
+function remoteAnimeLibrary(items) { return (items || []).map(item => ({ id: Number(item.id), title: item.titulo || 'Anime sem título', japaneseTitle: '', image: item.capa_url || '', trailer: item.banner_url || item.capa_url || '', synopsis: item.sinopse || 'Sinopse indisponível.', score: '—', year: item.ano || '—', episodes: item.episodios?.length || 0, status: 'Disponível', genres: item.tags || [], studios: [], type: 'TV' })); }
 function cardTemplate(anime) { const isFavorite = favorites().includes(anime.id); return `<article class="anime-card" data-id="${anime.id}" tabindex="0" aria-label="Ver detalhes de ${escapeHtml(anime.title)}"><div class="anime-poster"><img src="${anime.image}" alt="Capa de ${escapeHtml(anime.title)}" loading="lazy"><span class="card-rating">★ ${anime.score}</span><button class="favorite-toggle ${isFavorite ? 'active' : ''}" data-favorite="${anime.id}" aria-label="${isFavorite ? 'Remover' : 'Adicionar'} ${escapeHtml(anime.title)} ${isFavorite ? 'da' : 'à'} lista">${isFavorite ? '♥' : '♡'}</button></div><h3>${escapeHtml(anime.title)}</h3><p>${anime.year} · ${anime.type}</p></article>`; }
 function renderRow(id, items) { const container = $(`#${id}`); container.innerHTML = items.length ? items.map(cardTemplate).join('') : '<div class="empty-state">Nenhum título encontrado.</div>'; bindCards(container); }
 function renderGrid(id, items) { const container = $(`#${id}`); container.innerHTML = items.length ? items.map(cardTemplate).join('') : '<div class="empty-state">Sua lista está vazia. Adicione animes pelos cards.</div>'; bindCards(container); }
@@ -82,8 +114,9 @@ async function loadHome() {
   if (!$('#season-grid')) return;
   ['season-grid', 'popular-grid', 'rated-grid', 'new-grid'].forEach(id => setSkeletons($(`#${id}`), id === 'new-grid' ? 8 : 6));
   try {
-    const [seasonData, popularData, ratedData] = await Promise.all([api('/seasons/now?limit=12'), api('/top/anime?limit=12'), api('/top/anime?filter=favorite&limit=12')]);
-    const season = remember(seasonData.data.map(normalize)); const registered = remember(catalogAnimeLibrary()); const radar = remember([PINNED_ANIME, ...registered, ...season.filter(item => item.id !== PINNED_ANIME.id)]); const popular = remember(popularData.data.map(normalize)); const rated = remember(ratedData.data.map(normalize));
+    const [seasonData, popularData, ratedData, remoteData] = await Promise.all([api('/seasons/now?limit=12'), api('/top/anime?limit=12'), api('/top/anime?filter=favorite&limit=12'), window.kageDB?.listarCatalogo?.() || Promise.resolve([])]);
+    window.KAGE_REMOTE_CATALOG = remoteData || [];
+    const season = remember(seasonData.data.map(normalize)); const registered = remember([...remoteAnimeLibrary(remoteData), ...catalogAnimeLibrary()]); const radar = remember([PINNED_ANIME, ...registered, ...season.filter(item => item.id !== PINNED_ANIME.id)]); const popular = remember(popularData.data.map(normalize)); const rated = remember(ratedData.data.map(normalize));
     renderRow('season-grid', radar); renderRow('popular-grid', popular); renderRow('rated-grid', rated); renderGrid('new-grid', radar.slice().reverse());
     const hero = season[0] || popular[0]; if (hero) setHero(hero);
   } catch { ['season-grid', 'popular-grid', 'rated-grid', 'new-grid'].forEach(id => { $(`#${id}`).innerHTML = '<div class="empty-state">A Jikan demorou para responder. Recarregue a página em alguns segundos.</div>'; }); $('#hero-title').textContent = 'Seu próximo anime começa aqui'; $('#hero-copy').textContent = 'Não foi possível carregar o destaque agora.'; }
